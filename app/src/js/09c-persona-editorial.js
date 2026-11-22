@@ -67,10 +67,13 @@ function personaEditorialHtml(e){
   const ideas = peLinks(section(e.body,'Ideas for this persona')).filter(x=> x.e.type==='IdeaForImprovement');
 
   /* hero: portrait, then who she is, a few lines of context, the conversation */
-  const ctx = [stripLinks(e.fm.description||''), ...peItems(section(e.body,'Who they are'))
+  // the "Known unknowns" list sits in the same section but is open questions, not facts: cut the section before it
+  const whoMd = section(e.body,'Who they are').split(/^\*\*Known unknowns.*$/mi)[0];
+  const cap = t=> t.charAt(0).toUpperCase() + t.slice(1);
+  const ctx = [stripLinks(e.fm.description||''), ...peItems(whoMd)
     .map(it=> it.text).filter(t=> !/\[colour\]/.test(t))            // character colour stays out of the headline
     .map(t=> stripLinks(t.replace(/^\*\*[^*]+:\*\*\s*/,'')).replace(/\*+/g,'').trim())]
-    .filter(Boolean).map(t=> /[.!?]$/.test(t) ? t : t+'.').join(' ');
+    .filter(Boolean).map(cap).map(t=> /[.!?]$/.test(t) ? t : t+'.').join(' ');
   const hero = `<section class="pe-hero">
       ${faceHtml(e, 'pe-portrait'+(prim?' prim':''), first)}
       <div class="pe-main">

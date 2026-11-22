@@ -520,9 +520,9 @@
   .hl-item-src { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: var(--text-caption); color: var(--text-dim); }
 
   /* ---------- in-view filter bar (filter pill + view toggle in one row) ---------- */
-  .filter-bar { display: flex; align-items: center; gap: var(--s-3); margin: 0 0 var(--s-3); }
+  .filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-3); margin: 0 0 var(--s-3); }  /* wrap: the view toggle drops below the pill on a phone */
   .filter-pill {
-    flex: 1; max-width: 420px;
+    flex: 1; max-width: 420px; min-width: 0;
     display: flex; align-items: center; gap: var(--s-2);
     padding: 6px 12px;
     background: var(--bg-elev); border: 1px solid var(--line);
@@ -3580,7 +3580,7 @@
   .dx-card { background: var(--bg-elev); border-radius: 16px; }
   .dx-empty { padding: var(--s-6); color: var(--text-dim); font-size: var(--fs-md); }
   .dx-sec { display: flex; flex-direction: column; gap: 20px; }
-  .dx-h2row { display: flex; align-items: center; gap: 8px; }
+  .dx-h2row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }  /* wrap: the brief button must not push the page sideways on a phone */
   .dx-h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
   .dx-h2note { color: var(--text-dim); font-size: var(--fs-md); margin-left: 4px; }
   .dx-spacer { flex: 1; }
@@ -14260,10 +14260,13 @@ function personaEditorialHtml(e){
   const ideas = peLinks(section(e.body,'Ideas for this persona')).filter(x=> x.e.type==='IdeaForImprovement');
 
   /* hero: portrait, then who she is, a few lines of context, the conversation */
-  const ctx = [stripLinks(e.fm.description||''), ...peItems(section(e.body,'Who they are'))
+  // the "Known unknowns" list sits in the same section but is open questions, not facts: cut the section before it
+  const whoMd = section(e.body,'Who they are').split(/^\*\*Known unknowns.*$/mi)[0];
+  const cap = t=> t.charAt(0).toUpperCase() + t.slice(1);
+  const ctx = [stripLinks(e.fm.description||''), ...peItems(whoMd)
     .map(it=> it.text).filter(t=> !/\[colour\]/.test(t))            // character colour stays out of the headline
     .map(t=> stripLinks(t.replace(/^\*\*[^*]+:\*\*\s*/,'')).replace(/\*+/g,'').trim())]
-    .filter(Boolean).map(t=> /[.!?]$/.test(t) ? t : t+'.').join(' ');
+    .filter(Boolean).map(cap).map(t=> /[.!?]$/.test(t) ? t : t+'.').join(' ');
   const hero = `<section class="pe-hero">
       ${faceHtml(e, 'pe-portrait'+(prim?' prim':''), first)}
       <div class="pe-main">
