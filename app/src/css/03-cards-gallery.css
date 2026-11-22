@@ -270,7 +270,7 @@
   /* ---------- in-view filter bar (filter pill + view toggle in one row) ---------- */
   .filter-bar { display: flex; align-items: center; gap: var(--s-3); margin: 0 0 var(--s-3); }
   .filter-pill {
-    flex: 1; max-width: 420px;
+    flex: 1; max-width: 420px; min-width: 0;  /* may shrink, so the view toggle never leaves a phone screen */
     display: flex; align-items: center; gap: var(--s-2);
     padding: 6px 12px;
     background: var(--bg-elev); border: 1px solid var(--line);

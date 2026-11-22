@@ -17,7 +17,7 @@
   .dx-card { background: var(--bg-elev); border-radius: 16px; }
   .dx-empty { padding: var(--s-6); color: var(--text-dim); font-size: var(--fs-md); }
   .dx-sec { display: flex; flex-direction: column; gap: 20px; }
-  .dx-h2row { display: flex; align-items: center; gap: 8px; }
+  .dx-h2row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }  /* wraps: a header button drops below the title on a phone instead of widening the page */
   .dx-h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
   .dx-h2note { color: var(--text-dim); font-size: var(--fs-md); margin-left: 4px; }
   .dx-spacer { flex: 1; }

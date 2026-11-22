@@ -67,10 +67,13 @@ function personaEditorialHtml(e){
   const ideas = peLinks(section(e.body,'Ideas for this persona')).filter(x=> x.e.type==='IdeaForImprovement');
 
   /* hero: portrait, then who she is, a few lines of context, the conversation */
-  const ctx = [stripLinks(e.fm.description||''), ...peItems(section(e.body,'Who they are'))
+  // only the bullets before the first bold label line: "Known unknowns" (or any later
+  // block) lists what we do NOT know, and must never read as context about her
+  const whoMd = section(e.body,'Who they are').split(/\n(?=\*\*[^*\n]+\*\*)/)[0];
+  const ctx = [stripLinks(e.fm.description||''), ...peItems(whoMd)
     .map(it=> it.text).filter(t=> !/\[colour\]/.test(t))            // character colour stays out of the headline
     .map(t=> stripLinks(t.replace(/^\*\*[^*]+:\*\*\s*/,'')).replace(/\*+/g,'').trim())]
-    .filter(Boolean).map(t=> /[.!?]$/.test(t) ? t : t+'.').join(' ');
+    .filter(Boolean).map(t=> t[0].toUpperCase() + t.slice(1)).map(t=> /[.!?]$/.test(t) ? t : t+'.').join(' ');
   const hero = `<section class="pe-hero">
       ${faceHtml(e, 'pe-portrait'+(prim?' prim':''), first)}
       <div class="pe-main">
